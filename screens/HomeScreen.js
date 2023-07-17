@@ -1,11 +1,13 @@
-import { Image, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Image, ScrollView, Text, TextInput, View } from 'react-native'
 import {
   UserIcon,
   ChevronDownIcon,
   MagnifyingGlassIcon,
   AdjustmentsVerticalIcon,
 } from 'react-native-heroicons/outline'
+
+import { Categories } from '../components'
 
 const HomeScreen = () => {
   return (
@@ -41,6 +43,18 @@ const HomeScreen = () => {
         </View>
         <AdjustmentsVerticalIcon color="#00CCBB" />
       </View>
+
+      <ScrollView
+        className="bg-gray-100"
+        contentContainerStyle={{
+          paddingBottom: 100,
+        }}
+      >
+        {/* Categories */}
+        <Categories />
+
+        {/* Featured Rows */}
+      </ScrollView>
     </SafeAreaView>
   )
 }
