@@ -1,5 +1,13 @@
+import { useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Image, ScrollView, Text, TextInput, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native'
 import {
   UserIcon,
   ChevronDownIcon,
@@ -7,9 +15,29 @@ import {
   AdjustmentsVerticalIcon,
 } from 'react-native-heroicons/outline'
 
-import { Categories } from '../components'
+import { Categories, FeaturedRow } from '../components'
+import { fetchRestaurants } from '../sanity'
 
 const HomeScreen = () => {
+  const [featuredCategories, setFeaturedCategories] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    setIsLoading(true)
+    try {
+      fetchRestaurants().then((res) => {
+        // console.log('Restaurants: ', res)
+        setFeaturedCategories(res)
+        setInterval(() => {
+          setIsLoading(false)
+        }, 2000)
+      })
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
+    }
+  }, [])
+
   return (
     <SafeAreaView className="bg-white pt-5">
       {/* Header */}
@@ -50,10 +78,27 @@ const HomeScreen = () => {
           paddingBottom: 100,
         }}
       >
-        {/* Categories */}
-        <Categories />
+        {isLoading ? (
+          <View className="flex-1 h-80 items-center justify-center">
+            <ActivityIndicator size={'large'} color={'teal'} />
+          </View>
+        ) : (
+          <>
+            {/* Categories */}
+            <Categories />
 
-        {/* Featured Rows */}
+            {/* Featured */}
+
+            {featuredCategories?.map((category) => (
+              <FeaturedRow
+                key={category._id}
+                id={category._id}
+                title={category.name}
+                description={category.short_description}
+              />
+            ))}
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   )

@@ -1,8 +1,40 @@
-import { View, Text, ScrollView } from "react-native";
-import { ArrowRightIcon } from "react-native-heroicons/outline";
-import RestaurantCard from "./RestaurantCard";
+import { View, Text, ScrollView } from 'react-native'
+import { ArrowRightIcon } from 'react-native-heroicons/outline'
+import RestaurantCard from './RestaurantCard'
+import client from '../sanity'
+import { useEffect, useState } from 'react'
 
 const FeaturedRow = ({ id, title, description }) => {
+  const [restaurants, setRestaurants] = useState([])
+
+  useEffect(() => {
+    try {
+      client
+        .fetch(
+          `
+  *[_type == 'featured' && _id == $id] {
+    ...,
+    restaurants[] -> {
+      ...,
+      dishes[] ->,
+      type -> {
+        name
+      }
+    }
+  }[0]
+  `,
+          { id }
+        )
+        .then((data) => {
+          setRestaurants(data?.restaurants)
+          // console.log('Data: ', data?.restaurants)
+          setInterval(() => {}, 2000)
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+
   return (
     <View>
       <View className="mt-4 flex-row items-center justify-between px-4">
@@ -20,82 +52,24 @@ const FeaturedRow = ({ id, title, description }) => {
         showsHorizontalScrollIndicator={false}
         className="pt-4"
       >
-        {/* Restaurant Card */}
-        <RestaurantCard 
-            id={123}
-            imgUrl='https://links.papareact.com/gn7'
-            title='Yo! Sushi!'
-            rating={4.5}
-            genre='Japanese'
-            address='Nitra, 123'
-            short_description='This is a Test desc'
-            dishes={[]}
-            long={20}
-            lat={0}
-        />
-        <RestaurantCard 
-            id={123}
-            imgUrl='https://links.papareact.com/gn7'
-            title='Yo! Sushi!'
-            rating={4.5}
-            genre='Japanese'
-            address='Nitra, 123'
-            short_description='This is a Test desc'
-            dishes={[]}
-            long={20}
-            lat={0}
-        />
-        <RestaurantCard 
-            id={123}
-            imgUrl='https://links.papareact.com/gn7'
-            title='Yo! Sushi!'
-            rating={4.5}
-            genre='Japanese'
-            address='Nitra, 123'
-            short_description='This is a Test desc'
-            dishes={[]}
-            long={20}
-            lat={0}
-        />
-        <RestaurantCard 
-            id={123}
-            imgUrl='https://links.papareact.com/gn7'
-            title='Yo! Sushi!'
-            rating={4.5}
-            genre='Japanese'
-            address='Nitra, 123'
-            short_description='This is a Test desc'
-            dishes={[]}
-            long={20}
-            lat={0}
-        />
-        <RestaurantCard 
-            id={123}
-            imgUrl='https://links.papareact.com/gn7'
-            title='Yo! Sushi!'
-            rating={4.5}
-            genre='Japanese'
-            address='Nitra, 123'
-            short_description='This is a Test desc'
-            dishes={[]}
-            long={20}
-            lat={0}
-        />
-        <RestaurantCard 
-            id={123}
-            imgUrl='https://links.papareact.com/gn7'
-            title='Yo! Sushi!'
-            rating={4.5}
-            genre='Japanese'
-            address='Nitra, 123'
-            short_description='This is a Test desc'
-            dishes={[]}
-            long={20}
-            lat={0}
-        />
+        {restaurants?.map((restaurant) => (
+          <RestaurantCard
+            key={restaurant._id}
+            id={restaurant._id}
+            imgUrl={restaurant.image}
+            address={restaurant.address}
+            title={restaurant.name}
+            dishes={restaurant.dishes}
+            rating={restaurant.rating}
+            short_description={restaurant.short_description}
+            genre={restaurant.type?.name}
+            long={restaurant.long}
+            lat={restaurant.lat}
+          />
+        ))}
       </ScrollView>
     </View>
-  );
-};
+  )
+}
 
-export default FeaturedRow;
+export default FeaturedRow
