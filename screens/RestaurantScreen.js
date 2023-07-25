@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import { useEffect } from 'react'
 import { urlFor } from '../sanity'
 import {
   ArrowLeftIcon,
@@ -8,10 +9,14 @@ import {
   MapPinIcon,
 } from 'react-native-heroicons/solid'
 import { QuestionMarkCircleIcon } from 'react-native-heroicons/outline'
-import { DishRow } from '../components'
-import BasketIcon from '../components/BasketIcon'
+import { BasketIcon, DishRow } from '../components'
+import { useDispatch } from 'react-redux'
+import { setRestaurant } from '../features/restaurantSlice'
 
 const RestaurantScreen = () => {
+  const navigation = useNavigation()
+  const dispatch = useDispatch()
+
   const {
     params: {
       id,
@@ -26,7 +31,23 @@ const RestaurantScreen = () => {
       lat,
     },
   } = useRoute()
-  const navigation = useNavigation()
+
+  useEffect(() => {
+    dispatch(
+      setRestaurant({
+        id,
+        imgUrl,
+        title,
+        rating,
+        genre,
+        address,
+        short_description,
+        dishes,
+        long,
+        lat,
+      })
+    )
+  }, [])
 
   return (
     <>
@@ -79,7 +100,7 @@ const RestaurantScreen = () => {
           </TouchableOpacity>
         </View>
 
-        <View  className='pb-36'>
+        <View className="pb-36">
           <Text className="px-4 pt-6 mb-3 font-bold text-xl">Menu</Text>
 
           {dishes.map((dish) => (
