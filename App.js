@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import {
   BasketScreen,
+  DeliveryScreen,
   HomeScreen,
   PreparingOrderScreen,
   RestaurantScreen,
@@ -31,6 +32,11 @@ export default function App() {
           <Stack.Screen
             name="PreparingOrder"
             component={PreparingOrderScreen}
+            options={{ presentation: 'fullScreenModal' }}
+          />
+          <Stack.Screen
+            name="Delivery"
+            component={DeliveryScreen}
             options={{ presentation: 'fullScreenModal' }}
           />
         </Stack.Navigator>
