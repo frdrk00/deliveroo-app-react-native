@@ -1,13 +1,7 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image,TouchableOpacity } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { urlFor } from '../sanity'
-import { TouchableOpacity } from 'react-native'
-import {
-  ArrowLeftIcon,
-  ChevronRightIcon,
-  MapPinIcon,
-  StarIcon,
-} from 'react-native-heroicons/outline'
+import { ArrowLeftIcon, ChevronRightIcon, StarIcon, MapPinIcon } from 'react-native-heroicons/solid'
 import { QuestionMarkCircleIcon } from 'react-native-heroicons/outline'
 import { DishRow } from '../components'
 
@@ -39,7 +33,7 @@ const RestaurantScreen = () => {
         />
         <TouchableOpacity
           onPress={navigation.goBack}
-          className="absolute top-14 left-5 p-2 bg-gray-100  rounded-full"
+          className="absolute top-14 left-5 p-2 bg-gray-100 rounded-full"
         >
           <ArrowLeftIcon size={20} color="#00CCBB" />
         </TouchableOpacity>
